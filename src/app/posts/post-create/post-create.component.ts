@@ -1,6 +1,6 @@
-import { Component,OnInit, EventEmitter, Output } from '@angular/core';
+import { Component,OnInit, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Post } from '../post.model';
+import { PostsService } from '../posts.service';
 
 @Component({
   selector: 'app-post-create',
@@ -10,23 +10,21 @@ import { Post } from '../post.model';
 export class PostCreateComponent implements OnInit {
   enteredTitle = '';
   enteredContent = '';
-  @Output() postCreated = new EventEmitter<Post>()
 
   // onAddPost(postInput) {
   //   console.dir(postInput)
   //   this.newPost = postInput.value
   // } this is for the single data blinding
-  onAddPost(form: NgForm) {
-    if (form.invalid) {
-      return
-    }
-    const post: Post = {
-      title: form.value.title,
-      content: form.value.content
-    };
-    this.postCreated.emit(post)
-  }
+
+  constructor(public PostsService: PostsService) {}
 
   ngOnInit() {}
 
+  onAddPost(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+    this.PostsService.addPost(form.value.title, form.value.content)
+    form.resetForm()
+  }
 }
