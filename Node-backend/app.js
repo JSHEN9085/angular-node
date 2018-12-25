@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
+const Post = require('./models/post')
 // app.use((req, res, next) => {
 //   console.log('Fist middleware');
 //   next(); // continue to response, if we comment it, it will stay in here forever
@@ -27,7 +28,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 
 app.post('/api/posts', (req, res, next) => {
-  const post = req.body;
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content
+  });
   console.log(post);
   res.status(201).json({
     message: "Post added"
