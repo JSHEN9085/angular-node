@@ -1,7 +1,7 @@
 import { Component,OnInit, Input } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-post-list',
@@ -23,17 +23,17 @@ export class PostListComponent implements OnInit {
     this.posts = this.PostsService.getPosts();
     this.postsSub = this.PostsService.getPostUpdate()
     .subscribe((posts: Post[]) => {
-      console.log(posts)
+      // console.log(posts)
       this.posts = posts;
     });
   }
 
-  ngOnDestroy() {
-    this.postsSub.unsubscribe();
-  }
 
   onDelete(postId: string) {
     this.PostsService.deletePost(postId);
   }
 
+  ngOnDestroy() {
+    this.postsSub.unsubscribe();
+  }
 }

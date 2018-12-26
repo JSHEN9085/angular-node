@@ -14,6 +14,7 @@ export class PostsService {
   getPosts() {
     this.http.get<{posts: any}>('http://localhost:3000/api/posts')
     .pipe(map(postData => {
+      console.log(postData)
       return postData.posts.map(post => {
         return {
           id: post._id,
@@ -40,6 +41,7 @@ export class PostsService {
     };
     this.http.post<{message: string}>('http://localhost:3000/api/posts', post)
     .subscribe((response) => {
+      // console.log(response)
       post.id = response.postId
       this.posts.push(post);
       this.postsUpdated.next([...this.posts]);
