@@ -1,12 +1,16 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-
+const mongoose = require("mongoose");
 const Post = require('./models/post')
 // app.use((req, res, next) => {
 //   console.log('Fist middleware');
 //   next(); // continue to response, if we comment it, it will stay in here forever
 // });
+
+mongoose.connect("mongodb+srv://jshen9085:Working@2013@cluster0-h4nd4.mongodb.net/angular-node?retryWrites=true", { useNewUrlParser: true })
+  .then(() => {console.log("Connected to database!")})
+  .catch(() => {console.log("Connection failed")})
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', "*");
@@ -17,11 +21,12 @@ app.use((req, res, next) => {
 
 
 app.get('/api/posts' , (req, res, next) => {
-  const posts = [
-    {id: '1', title: "Test", content: "from backend"},
-    {id: '2', title: "Test2", content: "from backend2"}
-  ];
-  return res.status(200).json({posts})
+  Post.find().then(documents => {
+    res.status(200).json({
+      message: "Posts Fetched Successfully",
+      posts: documents
+    });
+  });
 });
 
 app.use(bodyParser.json());
@@ -32,10 +37,19 @@ app.post('/api/posts', (req, res, next) => {
     title: req.body.title,
     content: req.body.content
   });
-  console.log(post);
-  res.status(201).json({
-    message: "Post added"
-  });
+  post.save().then(result => {
+    res.status(201).json({
+      message: "Post added",
+      postId: result._id
+    });
+  })
 });
+
+app.delete('/api/posts/:id', (req, res, next) => {
+  // console.log(req.params.id);
+  Post.deleteOne({_id: req.params.id}).then(result => {
+    res.status(200).json({message: "Post deleted"})
+  })
+})
 
 module.exports = app;
