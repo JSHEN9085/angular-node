@@ -22,6 +22,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 
-app.use('/api/posts', postsRoutes);
+app.use('/api/posts', postsRoutes); // made routes in './routes/posts' starting from the first argument, '/api/posts'
 
 module.exports = app;
