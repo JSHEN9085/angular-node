@@ -1,3 +1,4 @@
+// to start the server, use command  'npm run start:server'
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -8,6 +9,7 @@ const postsRoutes = require('./routes/posts')
 //   next(); // continue to response, if we comment it, it will stay in here forever
 // });
 
+// mongoose go to https://cloud.mongodb.com/user#/atlas/login and login, if using different internet, need to change the IP address
 mongoose.connect("mongodb+srv://jshen9085:Working@2013@cluster0-h4nd4.mongodb.net/angular-node?retryWrites=true", { useNewUrlParser: true })
   .then(() => {console.log("Connected to database!")})
   .catch(() => {console.log("Connection failed")})
