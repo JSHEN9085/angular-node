@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const postsRoutes = require('./routes/posts')
+const path = require('path');
 // app.use((req, res, next) => {
 //   console.log('Fist middleware');
 //   next(); // continue to response, if we comment it, it will stay in here forever
@@ -23,6 +24,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
+app.use("/images", express.static(path.join("Node-backend/images"))) //allow fetch reach images folder
 
 app.use('/api/posts', postsRoutes); // made routes in './routes/posts' starting from the first argument, '/api/posts'
 
