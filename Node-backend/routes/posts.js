@@ -26,7 +26,15 @@ const storage = multer.diskStorage({
 });
 
 router.get('' , (req, res, next) => {
-  Post.find().then(documents => {
+  const pageSize = +req.query.pagesize; //+ will make it as number
+  const currentPage = req.query.page;
+  const postQuery = Post.find();
+  if (pageSize && currentPage) {
+    postQuery
+      .skip( pageSize * (currentPage - 1) ) //only takes number as pageSize, so we made it as number at line 29
+      .limit(pageSize);
+  }
+  postQuery.find().then(documents => {
     res.status(200).json({
       posts: documents
     });
@@ -64,6 +72,7 @@ router.post('', multer({storage: storage}).single("image"), (req, res, next) => 
 });
 
 router.put('/:id', multer({storage: storage}).single("image"), (req, res, next) => {
+  debugger
   let imagePath = req.body.imagePath;
   if(req.file) {
     const url = req.protocol + "://" + req.get("host");
