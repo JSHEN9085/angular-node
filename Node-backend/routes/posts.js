@@ -29,15 +29,22 @@ router.get('' , (req, res, next) => {
   const pageSize = +req.query.pagesize; //+ will make it as number
   const currentPage = req.query.page;
   const postQuery = Post.find();
+  let fetchedPosts;
   if (pageSize && currentPage) {
     postQuery
       .skip( pageSize * (currentPage - 1) ) //only takes number as pageSize, so we made it as number at line 29
       .limit(pageSize);
   }
-  postQuery.find().then(documents => {
-    res.status(200).json({
-      posts: documents
-    });
+  postQuery
+    .then(documents => {
+      fetchedPosts = documents
+      return Post.countDocuments();
+    })
+    .then(count => {
+      res.status(200).json({
+        posts: fetchedPosts,
+        maxPosts: count
+      });
   });
 });
 
